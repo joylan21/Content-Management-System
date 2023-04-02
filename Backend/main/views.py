@@ -133,16 +133,36 @@ def content_create_view(request):
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT'])
+@permission_classes([IsAuthenticated])
 def content_update_view(request, pk):
     """
     API view to update an existing content.
     """
-    if request.user.is_staff:
-        content = get_object_or_404(Content, pk=pk)
-    else:
-        content = get_object_or_404(Content, pk=pk,author=request.user)
-    serializer = ContentViewSerializer(content, data=request.data, partial=True)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        if request.user.is_staff:
+            content = get_object_or_404(Content, pk=pk)
+        else:
+            content = get_object_or_404(Content, pk=pk,author=request.user)
+        serializer = ContentViewSerializer(content, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def content_delete_view(request, pk):
+    """
+    API view to delete an existing content.
+    """
+    try:
+        if request.user.is_staff:
+            content = get_object_or_404(Content, pk=pk)
+        else:
+            content = get_object_or_404(Content, pk=pk,author=request.user)
+        content.delete()
+        return Response(status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
