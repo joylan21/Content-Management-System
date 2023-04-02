@@ -207,3 +207,16 @@ def category_create_view(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def category_delete_view(request, pk):
+    """
+    API view to delete an existing category.
+    """
+    try:
+        content = get_object_or_404(Category, pk=pk)
+        content.delete()
+        return Response('Category deleted successfully',status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
