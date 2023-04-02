@@ -7,6 +7,7 @@ from rest_framework.decorators import api_view,permission_classes
 from django.db.models import Q
 from .models import Content,Category
 from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import get_object_or_404
 
 class RegistrationView(generics.CreateAPIView):
     """
@@ -91,6 +92,22 @@ def content_list_view(request):
         if not request.user.is_staff:
             contents = contents.filter(author=request.user)
         serializer = ContentSerializer(contents, many=True,context={'request': request})
+        return Response(serializer.data,status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def content_detail_view(request, pk):
+    """
+    API view to get a content detail by primary key.
+    """
+    try:
+        if request.user.is_staff:
+            content = get_object_or_404(Content, pk=pk)
+        else :
+            content = get_object_or_404(Content, pk=pk,author=request.user)
+        serializer = ContentSerializer(content,context={'request': request})
         return Response(serializer.data,status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
