@@ -4,6 +4,7 @@ from .views import (
     LoginView,
     content_list_view,
     content_detail_view,
+    content_create_view,
     )
 
 urlpatterns = [
@@ -17,4 +18,5 @@ urlpatterns = [
     # content URLs
     path('contents/', content_list_view, name='content-list'),
     path('contents/<int:pk>/', content_detail_view, name='content-detail'),
+    path('contents/create/', content_create_view, name='content-create'),
 ]
