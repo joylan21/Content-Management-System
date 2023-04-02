@@ -1,7 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserSerializer,LoginSerializer,ContentSerializer
+from .serializers import UserSerializer,LoginSerializer,ContentSerializer,ContentViewSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.decorators import api_view,permission_classes
 from django.db.models import Q
@@ -109,5 +109,25 @@ def content_detail_view(request, pk):
             content = get_object_or_404(Content, pk=pk,author=request.user)
         serializer = ContentSerializer(content,context={'request': request})
         return Response(serializer.data,status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def content_create_view(request):
+    """
+    API view to create a new document. Required fields:
+    - title (string)
+    - body (string)
+    - summary (string)
+    - pdf_file (pdf)
+    - categories (list of category ids)
+    """
+    try:
+        serializer = ContentViewSerializer(data=request.data,context={'request': request})
+        if serializer.is_valid():
+            serializer.save(author=request.user)
+            return Response('Object created successfully', status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
