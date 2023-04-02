@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-
+from django.core.validators import MaxLengthValidator
 # Create your models here.
 
 class CustomUserManager(BaseUserManager):
@@ -48,3 +48,20 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+    
+class Category(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+
+class Content(models.Model):
+    title = models.CharField(max_length=30,validators=[MaxLengthValidator(30, "Title should not exceed 30 characters.")])
+    body = models.CharField(max_length=300, validators=[MaxLengthValidator(300, "Body text should not exceed 300 characters.")])
+    summary = models.CharField(max_length=60, validators=[MaxLengthValidator(60, "Summary should not exceed 60 characters.")])
+    pdf_file = models.FileField(upload_to='pdfs/')
+    categories = models.ManyToManyField(Category,blank=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
