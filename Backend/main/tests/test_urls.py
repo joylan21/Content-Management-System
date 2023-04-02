@@ -11,7 +11,8 @@ from main.views import (
     content_delete_view,
     category_list_view,
     category_detail_view,
-    category_create_view
+    category_create_view,
+    category_delete_view
 )
 
 class TestUrls(SimpleTestCase):
@@ -59,6 +60,10 @@ class TestUrls(SimpleTestCase):
     def test_category_create_url_is_resolved(self):
         url = reverse('category-create')
         self.assertEquals(resolve(url).func,category_create_view)
+
+    def test_category_delete_url_is_resolved(self):
+        url = reverse('category-delete',args=[1])
+        self.assertEquals(resolve(url).func,category_delete_view)
 
 
     
