@@ -116,7 +116,7 @@ def content_detail_view(request, pk):
 @permission_classes([IsAuthenticated])
 def content_create_view(request):
     """
-    API view to create a new document. Required fields:
+    API view to create a new content. Required fields:
     - title (string)
     - body (string)
     - summary (string)
@@ -131,3 +131,18 @@ def content_create_view(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PUT'])
+def content_update_view(request, pk):
+    """
+    API view to update an existing content.
+    """
+    if request.user.is_staff:
+        content = get_object_or_404(Content, pk=pk)
+    else:
+        content = get_object_or_404(Content, pk=pk,author=request.user)
+    serializer = ContentViewSerializer(content, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
