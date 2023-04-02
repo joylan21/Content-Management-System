@@ -9,7 +9,8 @@ from main.views import (
     content_create_view,
     content_update_view,
     content_delete_view,
-    category_list_view
+    category_list_view,
+    category_detail_view
 )
 
 class TestUrls(SimpleTestCase):
@@ -49,5 +50,10 @@ class TestUrls(SimpleTestCase):
     def test_category_list_url_is_resolved(self):
         url = reverse('category-list')
         self.assertEquals(resolve(url).func,category_list_view)
+
+    def test_category_detail_url_is_resolved(self):
+        url = reverse('category-detail',args=[1])
+        self.assertEquals(resolve(url).func,category_detail_view)
+
 
     
