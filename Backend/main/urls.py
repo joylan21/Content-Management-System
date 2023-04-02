@@ -7,6 +7,7 @@ from .views import (
     content_create_view,
     content_update_view,
     content_delete_view,
+    category_list_view,
     )
 
 urlpatterns = [
@@ -23,4 +24,7 @@ urlpatterns = [
     path('contents/create/', content_create_view, name='content-create'),
     path('contents/<int:pk>/update/', content_update_view, name='content-update'),
     path('contents/<int:pk>/delete/', content_delete_view, name='content-delete'),
+
+    # Category URLs
+    path('categories/', category_list_view, name='category-list'),
 ]
