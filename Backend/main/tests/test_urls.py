@@ -5,7 +5,8 @@ from main.views import (
     RegistrationView,
     LoginView,
     content_list_view,
-    content_detail_view
+    content_detail_view,
+    content_create_view
 )
 
 class TestUrls(SimpleTestCase):
@@ -29,5 +30,9 @@ class TestUrls(SimpleTestCase):
     def test_content_detail_url_is_resolved(self):
         url = reverse('content-detail',args=[1])
         self.assertEquals(resolve(url).func,content_detail_view)
+
+    def test_content_create_url_is_resolved(self):
+        url = reverse('content-create')
+        self.assertEquals(resolve(url).func,content_create_view)
 
     
