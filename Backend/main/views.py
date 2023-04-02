@@ -1,7 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from .serializers import UserSerializer,LoginSerializer,ContentSerializer,ContentViewSerializer
+from .serializers import UserSerializer,LoginSerializer,ContentSerializer,ContentViewSerializer,CategorySerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.decorators import api_view,permission_classes
 from django.db.models import Q
@@ -163,6 +163,19 @@ def content_delete_view(request, pk):
         else:
             content = get_object_or_404(Content, pk=pk,author=request.user)
         content.delete()
-        return Response(status=status.HTTP_200_OK)
+        return Response('Content deleted successfully',status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def category_list_view(request):
+    """
+    API view to get a list of all categories.
+    """
+    try:
+        categories = Category.objects.all()
+        serializer = CategorySerializer(categories, many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
