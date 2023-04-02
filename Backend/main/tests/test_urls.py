@@ -3,6 +3,7 @@ from django.urls import reverse,resolve
 
 from main.views import (
     RegistrationView,
+    LoginView
 )
 
 class TestUrls(SimpleTestCase):
@@ -11,3 +12,6 @@ class TestUrls(SimpleTestCase):
         url = reverse('register')
         self.assertEquals(resolve(url).func.view_class,RegistrationView)
 
+    def test_login_url_is_resolved(self):
+        url = reverse('login')
+        self.assertEquals(resolve(url).func.view_class,LoginView)
