@@ -81,14 +81,28 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ['id', 'name']
 
 class ContentSerializer(serializers.ModelSerializer):
-    categories = CategorySerializer(many=True)
-    pdf_file = serializers.SerializerMethodField()
+    categories =CategorySerializer(many=True)
+    pdf_file = serializers.FileField()
+
     class Meta:
         model = Content
-        fields = ['id', 'title', 'body', 'summary', 'pdf_file', 'categories', 'author']
+        fields = ['id', 'title', 'body', 'summary', 'pdf_file', 'categories']
 
     def get_pdf_file(self,obj):
         if obj.pdf_file:
             return self.context.get('request').build_absolute_uri(obj.pdf_file.url)
         else:
             return None
+        
+class ContentViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Content
+        fields = ['id', 'title', 'body', 'summary', 'pdf_file', 'categories']
+    
+    def create(self, validated_data):
+        categories_data = validated_data.pop('categories')
+        document = Content.objects.create(**validated_data)
+        for category_obj in categories_data:
+            category = Category.objects.get(id=category_obj.id)
+            document.categories.add(category)
+        return document
