@@ -6,6 +6,7 @@ from .views import (
     content_detail_view,
     content_create_view,
     content_update_view,
+    content_delete_view,
     )
 
 urlpatterns = [
@@ -21,4 +22,5 @@ urlpatterns = [
     path('contents/<int:pk>/', content_detail_view, name='content-detail'),
     path('contents/create/', content_create_view, name='content-create'),
     path('contents/<int:pk>/update/', content_update_view, name='content-update'),
+    path('contents/<int:pk>/delete/', content_delete_view, name='content-delete'),
 ]
