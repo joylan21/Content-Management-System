@@ -8,6 +8,7 @@ from .views import (
     content_update_view,
     content_delete_view,
     category_list_view,
+    category_detail_view
     )
 
 urlpatterns = [
@@ -27,4 +28,5 @@ urlpatterns = [
 
     # Category URLs
     path('categories/', category_list_view, name='category-list'),
+    path('categories/<int:pk>/', category_detail_view, name='category-detail'),
 ]
