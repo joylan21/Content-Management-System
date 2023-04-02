@@ -106,3 +106,16 @@ class ContentViewSerializer(serializers.ModelSerializer):
             category = Category.objects.get(id=category_obj.id)
             document.categories.add(category)
         return document
+    
+    def update(self, instance, validated_data):
+        categories_data = validated_data.pop('categories')
+        instance.title = validated_data.get('title', instance.title)
+        instance.body = validated_data.get('body', instance.body)
+        instance.summary = validated_data.get('summary', instance.summary)
+        instance.file = validated_data.get('file', instance.file)
+        instance.categories.clear()
+        for category_data in categories_data:
+            category = Category.objects.get(id=category_data['id'])
+            instance.categories.add(category)
+        instance.save()
+        return instance
