@@ -40,6 +40,10 @@ INSTALLED_APPS = [
 
     # apps
     'main',
+
+    # libraries
+    'rest_framework_simplejwt',
+
 ]
 
 MIDDLEWARE = [
@@ -75,6 +79,11 @@ WSGI_APPLICATION = 'Backend.wsgi.application'
 # custom user model
 AUTH_USER_MODEL = 'main.User'
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
