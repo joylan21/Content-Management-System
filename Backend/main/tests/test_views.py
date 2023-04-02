@@ -47,3 +47,41 @@ class RegistrationViewTest(TestCase):
             content_type='application/json'
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+class LoginViewTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            email='testuser@test.com',
+            full_name='Test User',
+            phone=1234567890,
+            address='Test Address',
+            city='Test City',
+            state='Test State',
+            country='Test Country',
+            pincode=123456,
+            password='Testpass@123'
+        )
+        self.valid_payload = {
+            'email': 'testuser@test.com',
+            'password': 'Testpass@123'
+        }
+        self.invalid_payload = {
+            'email': 'testuser@test.com',
+            'password': 'wrongpass'
+        }
+
+    def test_login_with_valid_credentials(self):
+        response = client.post(
+            reverse('login'),
+            data=json.dumps(self.valid_payload),
+            content_type='application/json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_login_with_invalid_credentials(self):
+        response = client.post(
+            reverse('login'),
+            data=json.dumps(self.invalid_payload),
+            content_type='application/json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
