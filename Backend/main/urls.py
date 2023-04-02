@@ -1,6 +1,9 @@
 from django.urls import path
 from .views import RegistrationView
-from .views import LoginView
+from .views import (
+    LoginView,
+    content_list_view
+    )
 
 urlpatterns = [
     
@@ -9,4 +12,7 @@ urlpatterns = [
 
     # api for user login
     path('login/', LoginView.as_view(), name='login'),
+
+    # content URLs
+    path('content_list_view/', content_list_view, name='content-list'),
 ]
