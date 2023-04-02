@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
-from .models import User
+from .models import User,Content,Category
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
@@ -74,3 +74,21 @@ class LoginSerializer(TokenObtainPairSerializer):
 
     class Meta:
         fields = ('email', 'password')
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id', 'name']
+
+class ContentSerializer(serializers.ModelSerializer):
+    categories = CategorySerializer(many=True)
+    pdf_file = serializers.SerializerMethodField()
+    class Meta:
+        model = Content
+        fields = ['id', 'title', 'body', 'summary', 'pdf_file', 'categories', 'author']
+
+    def get_pdf_file(self,obj):
+        if obj.pdf_file:
+            return self.context.get('request').build_absolute_uri(obj.pdf_file.url)
+        else:
+            return None
