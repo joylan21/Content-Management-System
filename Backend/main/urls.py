@@ -35,6 +35,6 @@ urlpatterns = [
     # Category URLs
     path('categories/', category_list_view, name='category-list'),
     path('categories/<int:pk>/', category_detail_view, name='category-detail'),
-    path('categories/create/', category_create_view, name='category-detail'),
-    path('categories/<int:pk>/delete/', category_delete_view, name='category-detail'),
+    path('categories/create/', category_create_view, name='category-create'),
+    path('categories/<int:pk>/delete/', category_delete_view, name='category-delete'),
 ]
