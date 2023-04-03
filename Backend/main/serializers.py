@@ -112,7 +112,7 @@ class ContentViewSerializer(serializers.ModelSerializer):
         instance.title = validated_data.get('title', instance.title)
         instance.body = validated_data.get('body', instance.body)
         instance.summary = validated_data.get('summary', instance.summary)
-        instance.pdf_file = validated_data.get('file', instance.pdf_file)
+        instance.pdf_file = validated_data.get('pdf_file', instance.pdf_file)
         instance.categories.clear()
         for category_data in categories_data:
             category = Category.objects.get(id=category_data.id)
