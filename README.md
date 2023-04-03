@@ -1,7 +1,5 @@
 # Content-Management-System
 
-coverage run manage.py test -v 2 && coverage report && coverage html
-
 Installation
 
 1. Clone the repository to your local machine using the following command:
