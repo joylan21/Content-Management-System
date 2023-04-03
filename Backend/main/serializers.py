@@ -100,7 +100,10 @@ class ContentViewSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'body', 'summary', 'pdf_file', 'categories']
     
     def create(self, validated_data):
-        categories_data = validated_data.pop('categories')
+        if 'categories' in validated_data.keys():
+            categories_data = validated_data.pop('categories')
+        else:
+            categories_data=[]
         document = Content.objects.create(**validated_data)
         for category_obj in categories_data:
             category = Category.objects.get(id=category_obj.id)
@@ -108,14 +111,18 @@ class ContentViewSerializer(serializers.ModelSerializer):
         return document
     
     def update(self, instance, validated_data):
-        categories_data = validated_data.pop('categories')
+        if 'categories' in validated_data.keys():
+            categories_data = validated_data.pop('categories')
+        else:
+            categories_data=[]
         instance.title = validated_data.get('title', instance.title)
         instance.body = validated_data.get('body', instance.body)
         instance.summary = validated_data.get('summary', instance.summary)
         instance.pdf_file = validated_data.get('pdf_file', instance.pdf_file)
-        instance.categories.clear()
-        for category_data in categories_data:
-            category = Category.objects.get(id=category_data.id)
-            instance.categories.add(category)
-        instance.save()
+        if categories_data:
+            instance.categories.clear()
+            for category_data in categories_data:
+                category = Category.objects.get(id=category_data.id)
+                instance.categories.add(category)
+            instance.save()
         return instance
